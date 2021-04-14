@@ -2,6 +2,7 @@ import java.util.*;
 import java.lang.StringBuilder;
 import java.io.*;
 class HelloWorld {
+    private final String[] hexValues = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
     public static void main(String[] args) throws IOException {
         // TODO Read txt file _DONE_
         BufferedReader in = new BufferedReader(new FileReader("C:\\Users\\asxdc\\Desktop\\Desktop\\Projects\\Java_projects\\Systems_Programming_Project\\input.txt"));
@@ -53,5 +54,44 @@ class HelloWorld {
         }
 
     }
+
+    // To hexa from binary
+    public void binaryToHexadecimal(String binary){
+        String hexadecimal;
+        binary  = leftPad(binary);
+        System.out.println(convertBinaryToHexadecimal(binary));
+    
+    }
+    
+    public String convertBinaryToHexadecimal(String binary){
+        String hexadecimal = "";
+        int sum = 0;
+        int exp = 0;
+        for (int i=0; i<binary.length(); i++){
+            exp = 3 - i%4;
+            if((i%4)==3){
+                sum = sum + Integer.parseInt(binary.charAt(i)+"")*(int)(Math.pow(2,exp));
+                hexadecimal = hexadecimal + hexValues[sum];
+                sum = 0;
+            }
+            else
+            {
+                sum = sum + Integer.parseInt(binary.charAt(i)+"")*(int)(Math.pow(2,exp));
+            }
+        }
+        return hexadecimal;
+    }
+    
+    public String leftPad(String binary){
+        int paddingCount =  0;
+        if ((binary.length()%4)>0)
+            paddingCount = 4-binary.length()%4;
+    
+        while(paddingCount>0) {
+            binary = "0" + binary;
+            paddingCount--;
+        }
+        return binary;
+    } 
 
 }
