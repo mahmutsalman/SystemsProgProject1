@@ -14,18 +14,44 @@ class HelloWorld {
         
         String[] stringArr = list.toArray(new String[0]);
 
+        // Char array to hold binary version of the input.(i.e 4u  0000 00011 1010 0000 ) . It is reused
+        char binaryArray[]={};
 
         //TODO Search for u value to understand it is unsigned integer
 
         for (int i = 0; i < stringArr.length; i++){
             if (stringArr[i] != null){
                 String textValue = stringArr[i];
-                for (int j = 0; j < stringArr.length; j++){
+                for (int j = 0; j < stringArr[i].length(); j++){
+                    //TODO unsigned convertion
                     if (textValue.charAt(j) == ('u')){
                         System.out.println("found u in the element");
+                        // Take apart value from 'number-u' and make it 'number' 
+                        //1- Find the location of the character 'u'
+                        //2- Delete that chac and create
+                        String unsignedInteger =stringArr[i].replace("u", ""); // 4u --> 4
+                        convert2BinaryFromInteger(binaryArray,Integer.parseInt(unsignedInteger));
+                        System.out.println(Arrays.toString(binaryArray));
+
+
+                       
+                       
                     }
                 }
             }
         }
     }
+    static void convert2BinaryFromInteger(char a[],int b){
+       // int number = Integer.parseInt(b);
+        for(int i=0;i<16;i++){
+            if(b % 2 ==0)
+                a[16-i] = '0';
+            else if(b  % 2 !=0)
+                a[16-i] = '1';
+                b = b / 2; // To go to next digit
+
+        }
+
+    }
+
 }
