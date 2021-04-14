@@ -15,9 +15,9 @@ class HelloWorld {
         String[] stringArr = list.toArray(new String[0]);
 
         // Char array to hold binary version of the input.(i.e 4u  0000 00011 1010 0000 ) . It is reused
-        char binaryArray[]={};
+        char[] binaryArray16 = new char[16];
 
-        //TODO Search for u value to understand it is unsigned integer
+        //TODO Search for 'u' value to understand it is unsigned integer
 
         for (int i = 0; i < stringArr.length; i++){
             if (stringArr[i] != null){
@@ -25,13 +25,13 @@ class HelloWorld {
                 for (int j = 0; j < stringArr[i].length(); j++){
                     //TODO unsigned convertion
                     if (textValue.charAt(j) == ('u')){
-                        System.out.println("found u in the element");
+                        
                         // Take apart value from 'number-u' and make it 'number' 
                         //1- Find the location of the character 'u'
                         //2- Delete that chac and create
                         String unsignedInteger =stringArr[i].replace("u", ""); // 4u --> 4
-                        convert2BinaryFromInteger(binaryArray,Integer.parseInt(unsignedInteger));
-                        System.out.println(Arrays.toString(binaryArray));
+                        convert2BinaryFromInteger(binaryArray16,Integer.parseInt(unsignedInteger));
+                        System.out.println(Arrays.toString(binaryArray16));
 
 
                        
@@ -45,9 +45,9 @@ class HelloWorld {
        // int number = Integer.parseInt(b);
         for(int i=0;i<16;i++){
             if(b % 2 ==0)
-                a[16-i] = '0';
+                a[15-i] = '0';
             else if(b  % 2 !=0)
-                a[16-i] = '1';
+                a[15-i] = '1';
                 b = b / 2; // To go to next digit
 
         }
