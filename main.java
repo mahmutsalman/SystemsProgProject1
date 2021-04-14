@@ -1,8 +1,9 @@
 import java.util.*;
 import java.lang.StringBuilder;
 import java.io.*;
+
 class HelloWorld {
-    private final String[] hexValues = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
+    private static final String[] hexValues = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
     public static void main(String[] args) throws IOException {
         // TODO Read txt file _DONE_
         BufferedReader in = new BufferedReader(new FileReader("C:\\Users\\asxdc\\Desktop\\Desktop\\Projects\\Java_projects\\Systems_Programming_Project\\input.txt"));
@@ -18,12 +19,30 @@ class HelloWorld {
         // Char array to hold binary version of the input.(i.e 4u  0000 00011 1010 0000 ) . It is reused
         char[] binaryArray16 = new char[16];
 
+
+        //Creating output.txt file
+        try {
+            File myObj = new File("output.txt");
+            if (myObj.createNewFile()) {
+              System.out.println("File created: " + myObj.getName());
+            } else {
+              System.out.println("File already exists.");
+            }
+          } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+          }
+
         //TODO Search for 'u' value to understand it is unsigned integer
 
         for (int i = 0; i < stringArr.length; i++){
+            boolean signedFlag=true; //To understan inğut is signed value
+            int j ; // Instead of inside of for loop, itialize here to be able go to next digit when progrmam finds '-' 
+            
             if (stringArr[i] != null){
                 String textValue = stringArr[i];
-                for (int j = 0; j < stringArr[i].length(); j++){
+                for ( j = 0; j < stringArr[i].length(); j++){
+                    
                     //TODO unsigned convertion
                     if (textValue.charAt(j) == ('u')){
                         
@@ -33,11 +52,30 @@ class HelloWorld {
                         String unsignedInteger =stringArr[i].replace("u", ""); // 4u --> 4
                         convert2BinaryFromInteger(binaryArray16,Integer.parseInt(unsignedInteger));
                         System.out.println(Arrays.toString(binaryArray16));
+                        String binary = String.valueOf(binaryArray16);
+                        // binaryToHexadecimal(binary);
+                        try {
+                            BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt",true));
+                            myWriter.write(binaryToHexadecimal(binary)+"\n");
+                            myWriter.close();
+                            System.out.println("Successfully wrote to the file.");
+                          } catch (IOException e) {
+                            System.out.println("An error occurred.");
+                            e.printStackTrace();
+                          }
 
 
                        
                        
                     }
+                    if(textValue.charAt(j)==('-')){
+                        //TODO Check if there is '.'
+
+                        String signedInteger =stringArr[i].replace("-", "");
+
+                    }
+
+
                 }
             }
         }
@@ -56,14 +94,14 @@ class HelloWorld {
     }
 
     // To hexa from binary
-    public void binaryToHexadecimal(String binary){
+    public static String binaryToHexadecimal(String binary){
         String hexadecimal;
         binary  = leftPad(binary);
-        System.out.println(convertBinaryToHexadecimal(binary));
-    
+        // System.out.println(convertBinaryToHexadecimal(binary));
+        return convertBinaryToHexadecimal(binary);
     }
     
-    public String convertBinaryToHexadecimal(String binary){
+    public static String convertBinaryToHexadecimal(String binary){
         String hexadecimal = "";
         int sum = 0;
         int exp = 0;
@@ -82,7 +120,7 @@ class HelloWorld {
         return hexadecimal;
     }
     
-    public String leftPad(String binary){
+    public static String leftPad(String binary){
         int paddingCount =  0;
         if ((binary.length()%4)>0)
             paddingCount = 4-binary.length()%4;
