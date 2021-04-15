@@ -298,5 +298,34 @@ class HelloWorld {
         return sb.reverse().toString();
 
     }
+    public static String adder(String b1, String b2) {
+
+        long a1 = Long.parseLong(b1);
+        long a2 = Long.parseLong(b2);
+
+        int i = 0, carry = 0;
+
+        //This is to hold the output binary number
+        int[] sum = new int[b1.length()];
+
+        while (a1 != 0 || a2 != 0)
+        {
+            sum[i++] = (int)((a1 % 10 + a2 % 10 + carry) % 2);
+            carry = (int)((a1 % 10 + a2 % 10 + carry) / 2);
+            a1 = a1 / 10;
+            a2 = a2 / 10;
+        }
+        if (carry != 0) {
+            sum[i++] = carry;
+        }
+        --i;
+        String output = "";
+        StringBuilder sb = new StringBuilder(output);
+        for (int j = 0; j < sum.length; j++) {
+            sb.append(sum[j]);
+        }
+
+        return sb.reverse().toString();
+    }
 
 }
