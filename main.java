@@ -67,6 +67,10 @@ class HelloWorld {
         // TODO Search for 'u' value to understand it is unsigned integer
 
         for (int i = 0; i < stringArr.length; i++) {
+            boolean isSigned = false;
+
+
+
             boolean signedFlag = true; // To understan inğut is signed value
             int j = 0; // Instead of inside of for loop, itialize here to be able go to next digit when
             // progrmam finds '-'
@@ -74,6 +78,46 @@ class HelloWorld {
             if (stringArr[i] != null) {
                 String textValue = stringArr[i];
 
+
+                if (textValue.contains(".")) {
+                    String[] tokens = textValue.split("\\.");
+                    if (tokens[1].length() == 1 && tokens[1].contains("0")) { // if number is like 1.0
+                        isSigned = true;
+                        String textValue0 = tokens[0];
+                        if (!textValue0.contains("u")) {
+                            // TODO exctract ' - ' from input(textValue)
+                            // TODO Check if there is '.'
+                            if (textValue0.contains("-")) {
+                                // For signed values
+                                String signedInteger = textValue0;// textValue
+                                String binary = convertNegativeNumberToBinary(Integer.parseInt(signedInteger), 2);
+                                //TODO Convert binary to hexa
+                                try {
+                                    BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
+                                    myWriter.write(binaryToHexadecimal(binary) + "\n");
+                                    myWriter.close();
+                                    System.out.println("Successfully wrote to the file.");
+                                } catch (IOException e) {
+                                    System.out.println("An error occurred.");
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                String signedInteger = textValue0;// textValue
+                                String binary = convertPositiveNumberToBinary(Integer.parseInt(signedInteger), 2, false);
+                                try {
+                                    BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
+                                    myWriter.write(binaryToHexadecimal(binary) + "\n");
+                                    myWriter.close();
+                                    System.out.println("Successfully wrote to the file.");
+                                } catch (IOException e) {
+                                    System.out.println("An error occurred.");
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        continue;
+                    }
+                }
 
                 // TODO unsigned convertion
                 if (textValue.contains("u")) {
