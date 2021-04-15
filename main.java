@@ -7,6 +7,27 @@ class HelloWorld {
             "E", "F" };
 
     public static void main(String[] args) throws IOException {
+        int byt = 1;
+        int expBit = 0, mantissa = 0;
+        switch (byt) {
+            case 1:
+                expBit = 3;
+                mantissa = 4;
+                break;
+            case 2:
+                expBit = 8;
+                mantissa = 7;
+                break;
+            case 3:
+                expBit = 10;
+                mantissa = 13;
+                break;
+            case 4:
+                expBit = 12;
+                mantissa = 19;
+                break;
+        }
+        Calculator calculator = new Calculator();
         // TODO Read txt file _DONE_
         BufferedReader in = new BufferedReader(new FileReader(
                 "input.txt"));
