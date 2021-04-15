@@ -9,7 +9,7 @@ class HelloWorld {
     public static void main(String[] args) throws IOException {
         // TODO Read txt file _DONE_
         BufferedReader in = new BufferedReader(new FileReader(
-                "C:\\Users\\asxdc\\Desktop\\Desktop\\Projects\\Java_projects\\Systems_Programming_Project\\input.txt"));
+                "input.txt"));
         String str;
 
         List<String> list = new ArrayList<String>();
@@ -41,57 +41,41 @@ class HelloWorld {
         for (int i = 0; i < stringArr.length; i++) {
             boolean signedFlag = true; // To understan inğut is signed value
             int j = 0; // Instead of inside of for loop, itialize here to be able go to next digit when
-                       // progrmam finds '-'
+            // progrmam finds '-'
 
             if (stringArr[i] != null) {
                 String textValue = stringArr[i];
-                for (j = 0; j < stringArr[i].length(); j++) {
 
-                    // TODO unsigned convertion
-                    if (textValue.charAt(j) == ('u')) {
 
-                        // Take apart value from 'number-u' and make it 'number'
-                        // 1- Find the location of the character 'u'
-                        // 2- Delete that chac and create
-                        String unsignedInteger = stringArr[i].replace("u", ""); // 4u --> 4
+                // TODO unsigned convertion
+                if (textValue.contains("u")) {
 
-                        convert2BinaryFromInteger(binaryArray16, Integer.parseInt(unsignedInteger));
-                        System.out.println(Arrays.toString(binaryArray16));
-                        String binary = String.valueOf(binaryArray16);
-                        // binaryToHexadecimal(binary);
-                        try {
-                            BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
-                            myWriter.write(binaryToHexadecimal(binary) + "\n");
-                            myWriter.close();
-                            System.out.println("Successfully wrote to the file.");
-                        } catch (IOException e) {
-                            System.out.println("An error occurred.");
-                            e.printStackTrace();
-                        }
-
+                    // Take apart value from 'number-u' and make it 'number'
+                    // 1- Find the location of the character 'u'
+                    // 2- Delete that chac and create
+                    String unsignedInteger = stringArr[i].replace("u", ""); // 4u --> 4
+                    convert2BinaryFromInteger(binaryArray16, Integer.parseInt(unsignedInteger));
+                    System.out.println(Arrays.toString(binaryArray16));
+                    String binary = String.valueOf(binaryArray16);
+                    // binaryToHexadecimal(binary);
+                    try {
+                        BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
+                        myWriter.write(binaryToHexadecimal(binary) + "\n");
+                        myWriter.close();
+                        System.out.println("Successfully wrote to the file.");
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                        e.printStackTrace();
                     }
-                    // For signed floating point
-                    if (textValue.charAt(j) == ('-')) {
-                        // TODO exctract ' - ' from input(textVlue)
-
-                        // TODO Check if there is '.'
-
-                        for (; j < stringArr[i].length(); j++) {
-                            if (textValue.charAt(j) == '.') {
-                                //Floating point part
-                                String floatingPoint = stringArr[i].replace(".", "");// 0
-                                String unsignedInteger = stringArr[i].replace("-", ""); // 0
-                                // Here do the process with floating point
-                                j = stringArr[i].length(); // With this, you go next input
-
-                            }
-                        }
-
+                }
+                // For signed floating point
+                if (!textValue.contains("u") && !textValue.contains(".")) {
+                    // TODO exctract ' - ' from input(textValue)
+                    // TODO Check if there is '.'
+                    if (textValue.contains("-")) {
                         // For signed values
                         String signedInteger = stringArr[i];// textValue
-
-                       
-                        String binary = convertNegativeNumberToBinary(Integer.parseInt(signedInteger),2);
+                        String binary = convertNegativeNumberToBinary(Integer.parseInt(signedInteger), 2);
                         //TODO Convert binary to hexa
                         try {
                             BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
@@ -102,10 +86,20 @@ class HelloWorld {
                             System.out.println("An error occurred.");
                             e.printStackTrace();
                         }
-
-
                     }
-
+                    else {
+                        String signedInteger = stringArr[i];// textValue
+                        String binary = convertPositiveNumberToBinary(Integer.parseInt(signedInteger), 2, false);
+                        try {
+                            BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
+                            myWriter.write(binaryToHexadecimal(binary) + "\n");
+                            myWriter.close();
+                            System.out.println("Successfully wrote to the file.");
+                        } catch (IOException e) {
+                            System.out.println("An error occurred.");
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }
