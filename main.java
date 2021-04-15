@@ -6,7 +6,7 @@ import java.io.*;
 class HelloWorld {
     private static final String[] hexValues = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
     public static void main(String[] args) throws IOException {
-        int byt = 4;
+        int byt = 1;
         int expBit = 0, mantissa = 0;
         switch (byt) {
             case 1:
@@ -150,19 +150,24 @@ class HelloWorld {
                         }
                         String signValue = (sign) ? "0": "1";
                         String fraction = newS.substring(2, newS.length());
-                        exponent = exponent; //decimal
                         sign = sign; //boolean
                         int bias = (int)Math.pow(2, expBit-1) -1;
                         int exp = Integer.parseInt(exponent) + bias;
                         char[] a = convert2BinaryFromInteger(exp, expBit);
                         String exponentString = new String(a);
-                        StringBuilder ieee = StringBuilder(new String)
-                        System.out.println("");
+                        StringBuilder ieee = new StringBuilder(new String());
+                        ieee.append(signValue);
+                        ieee.append(exponentString);
+                        ieee.append(fraction);
+                        System.out.println("ieee representation is: " + ieee.toString());
+                        ieee.toString();
+
                     }
                 }
             }
         }
     }
+
     static void convert2BinaryFromInteger(char a[],int b){
         // int number = Integer.parseInt(b);
         for(int i=0;i<16;i++){
