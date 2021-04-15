@@ -43,7 +43,7 @@ public class Calculator {
     }
 
     public String[] normalizer(String s) { // takes input example: 1001.1001 and converts into 1.0011001,
-                                            // and returns it and its exponent
+        // and returns it and its exponent
 
         String newNumber = "";
         String exp = "";
@@ -58,5 +58,9 @@ public class Calculator {
         }
 
         return new String[] {newNumber, exp};
+    }
+
+    public String rounder(String s) {
+        return "s";
     }
 }
