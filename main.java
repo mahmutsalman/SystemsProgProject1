@@ -57,7 +57,7 @@ class HelloWorld {
         }
         String[] stringArr = list.toArray(new String[0]);
         // Char array to hold binary version of the input.(i.e 4u 0000 00011 1010 0000 )
-        // . It is reused
+        // It is reused
         char[] binaryArray16 = new char[16];
         // Creating output.txt file
         try {
@@ -74,15 +74,15 @@ class HelloWorld {
 
         for (int i = 0; i < stringArr.length; i++) {
             boolean isSigned = false;
-            boolean signedFlag = true; // To understan inğut is signed value
-            int j = 0; // Instead of inside of for loop, itialize here to be able go to next digit when
-            // progrmam finds '-'
+            boolean signedFlag = true; // To understand input is signed value
+            int j = 0; // Instead of inside of for loop, initialize here to be able go to next digit when
+            // program finds '-'
 
             if (stringArr[i] != null) {
                 String textValue = stringArr[i];
 
 
-                if (textValue.contains(".")) {
+                if (textValue.contains(".")) { // for 1.0 like numbers
                     String[] tokens = textValue.split("\\.");
                     if (tokens[1].length() == 1 && tokens[1].contains("0")) { // if number is like 1.0
                         isSigned = true;
@@ -120,16 +120,14 @@ class HelloWorld {
                         continue;
                     }
                 }
-                if (textValue.contains("u")) {
+                if (textValue.contains("u")) { //for unsigned data
 
                     // Take apart value from 'number-u' and make it 'number'
                     // 1- Find the location of the character 'u'
                     // 2- Delete that chac and create
                     String unsignedInteger = stringArr[i].replace("u", ""); // 4u --> 4
                     convert2BinaryFromInteger(binaryArray16, Integer.parseInt(unsignedInteger));
-                    System.out.println(Arrays.toString(binaryArray16));
                     String binary = String.valueOf(binaryArray16);
-                    // binaryToHexadecimal(binary);
                     try {
                         BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
                         myWriter.write(binaryToHexadecimal(binary, endian) + "\n");
@@ -140,8 +138,7 @@ class HelloWorld {
                         e.printStackTrace();
                     }
                 }
-                // For signed floating point
-                if (!textValue.contains("u") && !textValue.contains(".")) {
+                if (!textValue.contains("u") && !textValue.contains(".")) { // For signed floating point
                     if (textValue.contains("-")) {
                         // For signed values
                         String signedInteger = stringArr[i];// textValue
@@ -172,7 +169,7 @@ class HelloWorld {
                     }
                 }
 
-                if(textValue.contains(".")){ //if floating point
+                if(textValue.contains(".")){ // for floating point data
 
                     StringBuilder sb = new StringBuilder(textValue);
                     boolean sign = true;
@@ -233,10 +230,11 @@ class HelloWorld {
                     char[] a = convert2BinaryFromInteger(exp, expBit);
                     String exponentString = new String(a);
                     StringBuilder ieee = new StringBuilder(new String());
+                    // get it all together
                     ieee.append(signValue);
                     ieee.append(exponentString);
                     ieee.append(fraction);
-                    //System.out.println("ieee representation is: " + ieee.toString());
+
                     String FP = binaryToHexadecimal(ieee.toString(), endian);
 
                     try {
@@ -248,15 +246,12 @@ class HelloWorld {
                         System.out.println("An error occurred.");
                         e.printStackTrace();
                     }
-
-
                 }
             }
         }
     }
-
+    //converts from integer to binary
     static void convert2BinaryFromInteger(char a[], int b) {
-        // int number = Integer.parseInt(b);
         for (int i = 0; i < 16; i++) {
             if (b % 2 == 0)
                 a[15 - i] = '0';
@@ -268,7 +263,7 @@ class HelloWorld {
     }
 
     static char[] convert2BinaryFromInteger(int b, int size){
-        // int number = Integer.parseInt(b);
+
         char[] a = new char[size];
         for(int i=0;i<size;i++){
             if(b % 2 ==0)
@@ -280,7 +275,7 @@ class HelloWorld {
         return a;
     }
 
-    // To hexa from binary
+    // converts hexa from binary
     public static String binaryToHexadecimal(String binary, int endian) {
         String hexadecimal;
         binary = leftPad(binary);
@@ -303,12 +298,7 @@ class HelloWorld {
             }
         }
         if (endian == 1) {
-//            for (int i = 0; i < hexadecimal.length();) {
-//                StringBuilder sb = new StringBuilder(hexadecimal);
-//                String temp = hexadecimal.substring(i,i+2);
-//                String temp2 = hexadecimal.substring(())
-//                i = i+2;
-//            }
+
             String newString = "";
             StringBuilder sb = new StringBuilder(newString);
             ArrayList<String> list = new ArrayList<>();
