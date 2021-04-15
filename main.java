@@ -8,7 +8,13 @@ class HelloWorld {
             "E", "F" };
 
     public static void main(String[] args) throws IOException {
-        int byt = 1;
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter the byte ordering type: ");
+
+        System.out.println("Enter the floating point size: ");
+        int byt = input.nextInt();
+
+
         int expBit = 0, mantissa = 0;
         switch (byt) {
             case 1:
@@ -123,7 +129,8 @@ class HelloWorld {
                         }
                     }
                 }
-                if(textValue.charAt(j)==('.')){ //if floating point
+
+                if(textValue.contains(".")){ //if floating point
                     //TODO Check for floating point numbers
                     StringBuilder sb = new StringBuilder(textValue);
                     boolean sign = true;
@@ -134,10 +141,10 @@ class HelloWorld {
                     String floatingNumber = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
                     String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
 
-                    System.out.println(textValue + " to floating point: " + floatingNumber + " " + exponent + " " + sign);
+                    //System.out.println(textValue + " to floating point: " + floatingNumber + " " + exponent + " " + sign);
 
                     String s = floatingNumber;
-                    System.out.println("s is " + s);
+                    //System.out.println("s is " + s);
                     StringBuilder sb2 = new StringBuilder(s);
                     String newS = "";
                     int size = mantissa;
@@ -145,7 +152,7 @@ class HelloWorld {
                     // no rounding
                     if (s.length() == size+2) {
                         newS = s;
-                        System.out.println(newS);
+                        //System.out.println(newS);
                     }
                     //if undernumbered, add zeros
                     else if (sb2.toString().length() < size+2) {
@@ -159,24 +166,24 @@ class HelloWorld {
                     //_ROUNDING
                     else if (s.charAt(k) == '0' ) { //round down
                         newS = s.substring(2, k);
-                        System.out.println("first" + " " + newS);
+                        //System.out.println("first" + " " + newS);
                     }
                     else if ( s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) { //round up
                         newS = s.substring(2, k);
                         String rounded = adder(newS, "1");
-                        System.out.println("second" + " " + rounded);
+                        //System.out.println("second" + " " + rounded);
                         newS = rounded;
                     }
                     else if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
                         if (s.charAt(k-1) == '1') { // round up
                             newS = s.substring(2, k);
                             String rounded = adder(newS, "1");
-                            System.out.println("third" + " " + rounded);
+                            //System.out.println("third" + " " + rounded);
                             newS = rounded;
                         }
                         if (s.charAt(k-1) == '0') { // round down
                             newS = s.substring(2, k);
-                            System.out.println("fourth" + " " + newS);
+                            //System.out.println("fourth" + " " + newS);
                         }
                     }
                     //appending
@@ -191,8 +198,22 @@ class HelloWorld {
                     ieee.append(signValue);
                     ieee.append(exponentString);
                     ieee.append(fraction);
+                    //System.out.println("ieee representation is: " + ieee.toString());
+                    String FP = binaryToHexadecimal(ieee.toString());
                     System.out.println("ieee representation is: " + ieee.toString());
-                    ieee.toString();
+                    System.out.println("ieee representation is: " + FP);
+
+
+                    try {
+                        BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
+                        myWriter.write(FP + "\n");
+                        myWriter.close();
+                        System.out.println("Successfully wrote to the file.");
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                        e.printStackTrace();
+                    }
+
 
                 }
             }
@@ -209,6 +230,21 @@ class HelloWorld {
             b = b / 2; // To go to next digit
 
         }
+
+    }
+
+    static char[] convert2BinaryFromInteger(int b, int size){
+        // int number = Integer.parseInt(b);
+        char[] a = new char[size];
+        for(int i=0;i<size;i++){
+            if(b % 2 ==0)
+                a[size-1-i] = '0';
+            else if(b  % 2 !=0)
+                a[size-1-i] = '1';
+            b = b / 2; // To go to next digit
+
+        }
+        return a;
 
     }
 
