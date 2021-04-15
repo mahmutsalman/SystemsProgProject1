@@ -185,10 +185,10 @@ class HelloWorld {
                     String floatingNumber = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
                     String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
 
-                    //System.out.println(textValue + " to floating point: " + floatingNumber + " " + exponent + " " + sign);
+
 
                     String s = floatingNumber;
-                    //System.out.println("s is " + s);
+
                     StringBuilder sb2 = new StringBuilder(s);
                     String newS = "";
                     int size = mantissa;
@@ -204,30 +204,29 @@ class HelloWorld {
                             sb2.append(0);
                             newS = sb2.toString();
                         }
-                        System.out.println(newS);
+
                     }
                     //if overnumbered, do rounding
                     //_ROUNDING
                     else if (s.charAt(k) == '0' ) { //round down
                         newS = s.substring(2, k);
-                        //System.out.println("first" + " " + newS);
+
                     }
                     else if ( s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) { //round up
                         newS = s.substring(2, k);
                         String rounded = adder(newS, "1");
-                        //System.out.println("second" + " " + rounded);
+
                         newS = rounded;
                     }
                     else if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
                         if (s.charAt(k-1) == '1') { // round up
                             newS = s.substring(2, k);
                             String rounded = adder(newS, "1");
-                            //System.out.println("third" + " " + rounded);
+
                             newS = rounded;
                         }
                         if (s.charAt(k-1) == '0') { // round down
-                            newS = s.substring(2, k);
-                            //System.out.println("fourth" + " " + newS);
+
                         }
                     }
                     //appending
@@ -244,8 +243,7 @@ class HelloWorld {
                     ieee.append(fraction);
                     //System.out.println("ieee representation is: " + ieee.toString());
                     String FP = binaryToHexadecimal(ieee.toString());
-                    System.out.println("ieee representation is: " + ieee.toString());
-                    System.out.println("ieee representation is: " + FP);
+
 
 
                     try {
