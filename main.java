@@ -6,21 +6,25 @@ import java.io.*;
 class HelloWorld {
     private static final String[] hexValues = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
     public static void main(String[] args) throws IOException {
-        int byt = 2;
-        int exp, mantissa;
+        int byt = 1;
+        int exp = 0, mantissa = 0;
         switch (byt) {
             case 1:
                 exp = 3;
                 mantissa = 4;
+                break;
             case 2:
                 exp = 8;
                 mantissa = 7;
+                break;
             case 3:
                 exp = 10;
                 mantissa = 13;
+                break;
             case 4:
                 exp = 12;
                 mantissa = 19;
+                break;
         }
         Calculator calculator = new Calculator();
         // TODO Read txt file _DONE_
@@ -102,20 +106,36 @@ class HelloWorld {
                         System.out.println(textValue + " to floating point: " + floatingNumber + " " + exponent + " " + sign);
 
                         String s = floatingNumber;
+                        StringBuilder sb2 = new StringBuilder(s);
                         String newS = "";
                         int size = 4;
-
                         int k = size +2;
-                        if (s.charAt(k) == '0' ) { //round down
+                        if (s.length() == size+2) {
+                            newS = s;
+
+                            System.out.println(newS);
+                        }
+
+                        else if (sb2.toString().length() < size+2) {
+                            while (sb2.toString().length() < size+2){
+
+                                sb2.append(0);
+                                newS = sb2.toString();
+
+                            }
+                            System.out.println(newS);
+                        }
+
+                        else if (s.charAt(k) == '0' ) { //round down
                             newS = s.substring(2, k);
                             System.out.println("first" + " " + newS);
                         }
-                        if ( s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) { //round up
+                        else if ( s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) { //round up
                             newS = s.substring(2, k);
                             String rounded = adder(newS, "1");
                             System.out.println("second" + " " + rounded);
                         }
-                        if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
+                        else if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
                             if (s.charAt(k-1) == '1') { // round up
                                 newS = s.substring(2, k);
                                 String rounded = adder(newS, "1");
