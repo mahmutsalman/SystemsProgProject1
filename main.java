@@ -226,12 +226,15 @@ class HelloWorld {
                             newS = rounded;
                         }
                         if (s.charAt(k-1) == '0') { // round down
-
+                            newS = s.substring(2, k);
                         }
                     }
                     //appending
                     String signValue = (sign) ? "0": "1";
                     String fraction = newS.substring(2, newS.length());
+                    if (!newS.contains(".")) {
+                        fraction = newS;
+                    }
                     sign = sign; //boolean
                     int bias = (int)Math.pow(2, expBit-1) -1;
                     int exp = Integer.parseInt(exponent) + bias;
