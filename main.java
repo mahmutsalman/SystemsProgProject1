@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.*;
 import java.lang.StringBuilder;
 import java.io.*;
@@ -121,6 +122,78 @@ class HelloWorld {
                             e.printStackTrace();
                         }
                     }
+                }
+                if(textValue.charAt(j)==('.')){ //if floating point
+                    //TODO Check for floating point numbers
+                    StringBuilder sb = new StringBuilder(textValue);
+                    boolean sign = true;
+                    if (textValue.charAt(0) == '-') {
+                        sign = false;
+                        sb.deleteCharAt(0);
+                    }
+                    String floatingNumber = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
+                    String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
+
+                    System.out.println(textValue + " to floating point: " + floatingNumber + " " + exponent + " " + sign);
+
+                    String s = floatingNumber;
+                    System.out.println("s is " + s);
+                    StringBuilder sb2 = new StringBuilder(s);
+                    String newS = "";
+                    int size = mantissa;
+                    int k = size +2;
+                    // no rounding
+                    if (s.length() == size+2) {
+                        newS = s;
+                        System.out.println(newS);
+                    }
+                    //if undernumbered, add zeros
+                    else if (sb2.toString().length() < size+2) {
+                        while (sb2.toString().length() < size+2){
+                            sb2.append(0);
+                            newS = sb2.toString();
+                        }
+                        System.out.println(newS);
+                    }
+                    //if overnumbered, do rounding
+                    //_ROUNDING
+                    else if (s.charAt(k) == '0' ) { //round down
+                        newS = s.substring(2, k);
+                        System.out.println("first" + " " + newS);
+                    }
+                    else if ( s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) { //round up
+                        newS = s.substring(2, k);
+                        String rounded = adder(newS, "1");
+                        System.out.println("second" + " " + rounded);
+                        newS = rounded;
+                    }
+                    else if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
+                        if (s.charAt(k-1) == '1') { // round up
+                            newS = s.substring(2, k);
+                            String rounded = adder(newS, "1");
+                            System.out.println("third" + " " + rounded);
+                            newS = rounded;
+                        }
+                        if (s.charAt(k-1) == '0') { // round down
+                            newS = s.substring(2, k);
+                            System.out.println("fourth" + " " + newS);
+                        }
+                    }
+                    //appending
+                    String signValue = (sign) ? "0": "1";
+                    String fraction = newS.substring(2, newS.length());
+                    sign = sign; //boolean
+                    int bias = (int)Math.pow(2, expBit-1) -1;
+                    int exp = Integer.parseInt(exponent) + bias;
+                    char[] a = convert2BinaryFromInteger(exp, expBit);
+                    String exponentString = new String(a);
+                    StringBuilder ieee = new StringBuilder(new String());
+                    ieee.append(signValue);
+                    ieee.append(exponentString);
+                    ieee.append(fraction);
+                    System.out.println("ieee representation is: " + ieee.toString());
+                    ieee.toString();
+
                 }
             }
         }
