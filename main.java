@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.*;
 import java.lang.StringBuilder;
 import java.io.*;
@@ -5,8 +6,25 @@ import java.io.*;
 class HelloWorld {
     private static final String[] hexValues = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
     public static void main(String[] args) throws IOException {
+        int byt = 2;
+        int exp, mantissa;
+        switch (byt) {
+            case 1:
+                exp = 3;
+                mantissa = 4;
+            case 2:
+                exp = 8;
+                mantissa = 7;
+            case 3:
+                exp = 10;
+                mantissa = 13;
+            case 4:
+                exp = 12;
+                mantissa = 19;
+        }
+        Calculator calculator = new Calculator();
         // TODO Read txt file _DONE_
-        BufferedReader in = new BufferedReader(new FileReader("C:\\Users\\asxdc\\Desktop\\Desktop\\Projects\\Java_projects\\Systems_Programming_Project\\input.txt"));
+        BufferedReader in = new BufferedReader(new FileReader("input.txt"));
         String str;
         
         List<String> list = new ArrayList<String>();
@@ -64,18 +82,20 @@ class HelloWorld {
                             e.printStackTrace();
                           }
 
-
-                       
-                       
                     }
-                    if(textValue.charAt(j)==('-')){
+                    if(textValue.charAt(j)==('-') && !textValue.contains(".")){
                         //TODO Check if there is '.'
 
                         String signedInteger =stringArr[i].replace("-", "");
+                    }
+                    if(textValue.charAt(j)==('.')){
+                        //TODO Check for floating point numbers
+                        String floatingNumber = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(textValue)))[0];
+                        String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(textValue)))[1];
+
+                        System.out.println(textValue + " to floating point: " + floatingNumber + " " + exponent);
 
                     }
-
-
                 }
             }
         }
