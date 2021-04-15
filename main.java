@@ -9,35 +9,34 @@ class HelloWorld {
 
     public static void main(String[] args) throws IOException {
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter the byte ordering type: ");
+        System.out.println("Enter the byte ordering type:  (for big-endian :1 for little-endian:2) ");
+        int endian = input.nextInt();
 
         System.out.println("Enter the floating point size: ");
         int byt = input.nextInt();
 
-
         int expBit = 0, mantissa = 0;
         switch (byt) {
-            case 1:
-                expBit = 3;
-                mantissa = 4;
-                break;
-            case 2:
-                expBit = 8;
-                mantissa = 7;
-                break;
-            case 3:
-                expBit = 10;
-                mantissa = 13;
-                break;
-            case 4:
-                expBit = 12;
-                mantissa = 19;
-                break;
+        case 1:
+            expBit = 3;
+            mantissa = 4;
+            break;
+        case 2:
+            expBit = 8;
+            mantissa = 7;
+            break;
+        case 3:
+            expBit = 10;
+            mantissa = 13;
+            break;
+        case 4:
+            expBit = 12;
+            mantissa = 19;
+            break;
         }
         Calculator calculator = new Calculator();
         // TODO Read txt file _DONE_
-        BufferedReader in = new BufferedReader(new FileReader(
-                "input.txt"));
+        BufferedReader in = new BufferedReader(new FileReader("input.txt"));
         String str;
 
         List<String> list = new ArrayList<String>();
@@ -69,15 +68,12 @@ class HelloWorld {
         for (int i = 0; i < stringArr.length; i++) {
             boolean isSigned = false;
 
-
-
             boolean signedFlag = true; // To understan inğut is signed value
             int j = 0; // Instead of inside of for loop, itialize here to be able go to next digit when
             // progrmam finds '-'
 
             if (stringArr[i] != null) {
                 String textValue = stringArr[i];
-
 
                 if (textValue.contains(".")) {
                     String[] tokens = textValue.split("\\.");
@@ -91,10 +87,10 @@ class HelloWorld {
                                 // For signed values
                                 String signedInteger = textValue0;// textValue
                                 String binary = convertNegativeNumberToBinary(Integer.parseInt(signedInteger), 2);
-                                //TODO Convert binary to hexa
+                                // TODO Convert binary to hexa
                                 try {
                                     BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
-                                    myWriter.write(binaryToHexadecimal(binary) + "\n");
+                                    myWriter.write(binaryToHexadecimal(binary,endian) + "\n");
                                     myWriter.close();
                                     System.out.println("Successfully wrote to the file.");
                                 } catch (IOException e) {
@@ -103,10 +99,11 @@ class HelloWorld {
                                 }
                             } else {
                                 String signedInteger = textValue0;// textValue
-                                String binary = convertPositiveNumberToBinary(Integer.parseInt(signedInteger), 2, false);
+                                String binary = convertPositiveNumberToBinary(Integer.parseInt(signedInteger), 2,
+                                        false);
                                 try {
                                     BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
-                                    myWriter.write(binaryToHexadecimal(binary) + "\n");
+                                    myWriter.write(binaryToHexadecimal(binary,endian) + "\n");
                                     myWriter.close();
                                     System.out.println("Successfully wrote to the file.");
                                 } catch (IOException e) {
@@ -132,7 +129,7 @@ class HelloWorld {
                     // binaryToHexadecimal(binary);
                     try {
                         BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
-                        myWriter.write(binaryToHexadecimal(binary) + "\n");
+                        myWriter.write(binaryToHexadecimal(binary,endian) + "\n");
                         myWriter.close();
                         System.out.println("Successfully wrote to the file.");
                     } catch (IOException e) {
@@ -148,23 +145,22 @@ class HelloWorld {
                         // For signed values
                         String signedInteger = stringArr[i];// textValue
                         String binary = convertNegativeNumberToBinary(Integer.parseInt(signedInteger), 2);
-                        //TODO Convert binary to hexa
+                        // TODO Convert binary to hexa
                         try {
                             BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
-                            myWriter.write(binaryToHexadecimal(binary) + "\n");
+                            myWriter.write(binaryToHexadecimal(binary,endian) + "\n");
                             myWriter.close();
                             System.out.println("Successfully wrote to the file.");
                         } catch (IOException e) {
                             System.out.println("An error occurred.");
                             e.printStackTrace();
                         }
-                    }
-                    else {
+                    } else {
                         String signedInteger = stringArr[i];// textValue
                         String binary = convertPositiveNumberToBinary(Integer.parseInt(signedInteger), 2, false);
                         try {
                             BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
-                            myWriter.write(binaryToHexadecimal(binary) + "\n");
+                            myWriter.write(binaryToHexadecimal(binary,endian) + "\n");
                             myWriter.close();
                             System.out.println("Successfully wrote to the file.");
                         } catch (IOException e) {
@@ -174,69 +170,67 @@ class HelloWorld {
                     }
                 }
 
-                if(textValue.contains(".")){ //if floating point
-                    //TODO Check for floating point numbers
+                if (textValue.contains(".")) { // if floating point
+                    // TODO Check for floating point numbers
                     StringBuilder sb = new StringBuilder(textValue);
                     boolean sign = true;
                     if (textValue.charAt(0) == '-') {
                         sign = false;
                         sb.deleteCharAt(0);
                     }
-                    String floatingNumber = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
-                    String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
-
-
+                    String floatingNumber = calculator
+                            .normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
+                    String exponent = calculator
+                            .normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
 
                     String s = floatingNumber;
 
                     StringBuilder sb2 = new StringBuilder(s);
                     String newS = "";
                     int size = mantissa;
-                    int k = size +2;
+                    int k = size + 2;
                     // no rounding
-                    if (s.length() == size+2) {
+                    if (s.length() == size + 2) {
                         newS = s;
-                        //System.out.println(newS);
+                        // System.out.println(newS);
                     }
-                    //if undernumbered, add zeros
-                    else if (sb2.toString().length() < size+2) {
-                        while (sb2.toString().length() < size+2){
+                    // if undernumbered, add zeros
+                    else if (sb2.toString().length() < size + 2) {
+                        while (sb2.toString().length() < size + 2) {
                             sb2.append(0);
                             newS = sb2.toString();
                         }
 
                     }
-                    //if overnumbered, do rounding
-                    //_ROUNDING
-                    else if (s.charAt(k) == '0' ) { //round down
+                    // if overnumbered, do rounding
+                    // _ROUNDING
+                    else if (s.charAt(k) == '0') { // round down
                         newS = s.substring(2, k);
 
-                    }
-                    else if ( s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) { //round up
+                    } else if (s.charAt(k) == '1' && s.substring(k + 1, s.length()).contains("1")) { // round up
                         newS = s.substring(2, k);
                         String rounded = adder(newS, "1");
 
                         newS = rounded;
-                    }
-                    else if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
-                        if (s.charAt(k-1) == '1') { // round up
+                    } else if (s.charAt(k) == '1' && !s.substring(k + 1, s.length()).contains("1")) { // halfway
+                        if (s.charAt(k - 1) == '1') { // round up
                             newS = s.substring(2, k);
                             String rounded = adder(newS, "1");
 
                             newS = rounded;
                         }
-                        if (s.charAt(k-1) == '0') { // round down
+                        if (s.charAt(k - 1) == '0') { // round down
                             newS = s.substring(2, k);
                         }
                     }
-                    //appending
-                    String signValue = (sign) ? "0": "1";
+                    // appending
+                    String signValue = (sign) ? "0" : "1";
                     String fraction = newS.substring(2, newS.length());
                     if (!newS.contains(".")) {
                         fraction = newS;
                     }
-                    sign = sign; //boolean
-                    int bias = (int)Math.pow(2, expBit-1) -1;
+                    sign = sign; // boolean
+                    int bias = (int) Math.pow(2, expBit - 1) - 1;
                     int exp = Integer.parseInt(exponent) + bias;
                     char[] a = convert2BinaryFromInteger(exp, expBit);
                     String exponentString = new String(a);
@@ -244,10 +238,8 @@ class HelloWorld {
                     ieee.append(signValue);
                     ieee.append(exponentString);
                     ieee.append(fraction);
-                    //System.out.println("ieee representation is: " + ieee.toString());
-                    String FP = binaryToHexadecimal(ieee.toString());
-
-
+                    // System.out.println("ieee representation is: " + ieee.toString());
+                    String FP = binaryToHexadecimal(ieee.toString(),endian);
 
                     try {
                         BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
@@ -258,7 +250,6 @@ class HelloWorld {
                         System.out.println("An error occurred.");
                         e.printStackTrace();
                     }
-
 
                 }
             }
@@ -278,14 +269,14 @@ class HelloWorld {
 
     }
 
-    static char[] convert2BinaryFromInteger(int b, int size){
+    static char[] convert2BinaryFromInteger(int b, int size) {
         // int number = Integer.parseInt(b);
         char[] a = new char[size];
-        for(int i=0;i<size;i++){
-            if(b % 2 ==0)
-                a[size-1-i] = '0';
-            else if(b  % 2 !=0)
-                a[size-1-i] = '1';
+        for (int i = 0; i < size; i++) {
+            if (b % 2 == 0)
+                a[size - 1 - i] = '0';
+            else if (b % 2 != 0)
+                a[size - 1 - i] = '1';
             b = b / 2; // To go to next digit
 
         }
@@ -294,24 +285,31 @@ class HelloWorld {
     }
 
     // To hexa from binary
-    public static String binaryToHexadecimal(String binary) {
+    public static String binaryToHexadecimal(String binary, int endian) {
         String hexadecimal;
         binary = leftPad(binary);
         // System.out.println(convertBinaryToHexadecimal(binary));
-        return convertBinaryToHexadecimal(binary);
+
+        return convertBinaryToHexadecimal(binary, endian);
     }
 
-    public static String convertBinaryToHexadecimal(String binary) {
+    public static String convertBinaryToHexadecimal(String binary, int endian) {
         String hexadecimal = "";
         int sum = 0;
         int exp = 0;
         for (int i = 0; i < binary.length(); i++) {
             exp = 3 - i % 4;
-            if ((i % 4) == 3) {
+            if ((i % 4) == 3 && endian == 1) {
                 sum = sum + Integer.parseInt(binary.charAt(i) + "") * (int) (Math.pow(2, exp));
                 hexadecimal = hexadecimal + hexValues[sum];
                 sum = 0;
-            } else {
+            } else if ((i % 4) == 3 && endian == 2) {
+                sum = sum + Integer.parseInt(binary.charAt(i) + "") * (int) (Math.pow(2, exp));
+                hexadecimal = hexValues[sum] + hexadecimal;
+                sum = 0;
+            }
+
+            else {
                 sum = sum + Integer.parseInt(binary.charAt(i) + "") * (int) (Math.pow(2, exp));
             }
         }
@@ -379,6 +377,7 @@ class HelloWorld {
         return sb.reverse().toString();
 
     }
+
     public static String adder(String b1, String b2) {
 
         long a1 = Long.parseLong(b1);
@@ -386,13 +385,12 @@ class HelloWorld {
 
         int i = 0, carry = 0;
 
-        //This is to hold the output binary number
+        // This is to hold the output binary number
         int[] sum = new int[b1.length()];
 
-        while (a1 != 0 || a2 != 0)
-        {
-            sum[i++] = (int)((a1 % 10 + a2 % 10 + carry) % 2);
-            carry = (int)((a1 % 10 + a2 % 10 + carry) / 2);
+        while (a1 != 0 || a2 != 0) {
+            sum[i++] = (int) ((a1 % 10 + a2 % 10 + carry) % 2);
+            carry = (int) ((a1 % 10 + a2 % 10 + carry) / 2);
             a1 = a1 / 10;
             a2 = a2 / 10;
         }
