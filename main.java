@@ -6,23 +6,23 @@ import java.io.*;
 class HelloWorld {
     private static final String[] hexValues = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
     public static void main(String[] args) throws IOException {
-        int byt = 1;
-        int exp = 0, mantissa = 0;
+        int byt = 4;
+        int expBit = 0, mantissa = 0;
         switch (byt) {
             case 1:
-                exp = 3;
+                expBit = 3;
                 mantissa = 4;
                 break;
             case 2:
-                exp = 8;
+                expBit = 8;
                 mantissa = 7;
                 break;
             case 3:
-                exp = 10;
+                expBit = 10;
                 mantissa = 13;
                 break;
             case 4:
-                exp = 12;
+                expBit = 12;
                 mantissa = 19;
                 break;
         }
@@ -108,7 +108,7 @@ class HelloWorld {
                         String s = floatingNumber;
                         StringBuilder sb2 = new StringBuilder(s);
                         String newS = "";
-                        int size = 4;
+                        int size = mantissa;
                         int k = size +2;
                         if (s.length() == size+2) {
                             newS = s;
@@ -134,19 +134,30 @@ class HelloWorld {
                             newS = s.substring(2, k);
                             String rounded = adder(newS, "1");
                             System.out.println("second" + " " + rounded);
+                            newS = rounded;
                         }
                         else if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
                             if (s.charAt(k-1) == '1') { // round up
                                 newS = s.substring(2, k);
                                 String rounded = adder(newS, "1");
                                 System.out.println("third" + " " + rounded);
+                                newS = rounded;
                             }
                             if (s.charAt(k-1) == '0') { // round down
                                 newS = s.substring(2, k);
                                 System.out.println("fourth" + " " + newS);
                             }
                         }
-
+                        String signValue = (sign) ? "0": "1";
+                        String fraction = newS.substring(2, newS.length());
+                        exponent = exponent; //decimal
+                        sign = sign; //boolean
+                        int bias = (int)Math.pow(2, expBit-1) -1;
+                        int exp = Integer.parseInt(exponent) + bias;
+                        char[] a = convert2BinaryFromInteger(exp, expBit);
+                        String exponentString = new String(a);
+                        StringBuilder ieee = StringBuilder(new String)
+                        System.out.println("");
                     }
                 }
             }
@@ -162,6 +173,20 @@ class HelloWorld {
             b = b / 2; // To go to next digit
 
         }
+
+    }
+    static char[] convert2BinaryFromInteger(int b, int size){
+        // int number = Integer.parseInt(b);
+        char[] a = new char[size];
+        for(int i=0;i<size;i++){
+            if(b % 2 ==0)
+                a[size-1-i] = '0';
+            else if(b  % 2 !=0)
+                a[size-1-i] = '1';
+            b = b / 2; // To go to next digit
+
+        }
+        return a;
 
     }
 
