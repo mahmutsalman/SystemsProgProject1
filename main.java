@@ -37,7 +37,7 @@ class HelloWorld {
 
         for (int i = 0; i < stringArr.length; i++){
             boolean signedFlag=true; //To understan inğut is signed value
-            int j ; // Instead of inside of for loop, itialize here to be able go to next digit when progrmam finds '-' 
+            int j=0 ; // Instead of inside of for loop, itialize here to be able go to next digit when progrmam finds '-' 
             
             if (stringArr[i] != null){
                 String textValue = stringArr[i];
@@ -68,10 +68,33 @@ class HelloWorld {
                        
                        
                     }
+                    // For signed convertion
                     if(textValue.charAt(j)==('-')){
+                        //TODO exctract ' - ' from input(textVlue)
+                       
+
                         //TODO Check if there is '.'
 
-                        String signedInteger =stringArr[i].replace("-", "");
+                      
+                        for(;j<stringArr[i].length();j++){
+                            if(textValue.charAt(j)=='.'){
+
+                                String floatingPoint =stringArr[i].replace(".", "");//0
+                                String unsignedInteger =stringArr[i].replace("-", ""); //0
+                                // Here do the process with floating point
+                                j=stringArr[i].length(); // With this, you go next input
+
+                            }
+                        }
+
+                        // For signed value
+                        String signedInteger =stringArr[i].replace("-", "");   
+
+
+                        
+
+                        
+
 
                     }
 
@@ -131,5 +154,55 @@ class HelloWorld {
         }
         return binary;
     } 
+    //Convert a positive decimal number to binary
+    public static String convertPositiveNumberToBinary(int n, int bytes,boolean reverse) {
+        int bits = 8 * bytes;
+        StringBuilder sb = new StringBuilder(bits); //in-bits
+        if (n == 0) {
+            sb.append("0");
+        } else {
+            while (n > 0) {
+                sb.append(n % 2);
+                n >>= 1;  //aka n/2
+            }
+        }
+
+        if (sb.length() < bits) {
+            for (int i = sb.length(); i < bits; i++) {
+                sb.append("0");
+
+            }
+        }
+        if (reverse) {
+            return sb.toString();
+        } else {
+            return sb.reverse().toString();
+        }
+    }
+    public static String convertNegativeNumberToBinary(int n, int bytes) {
+        int m = -n; //conver to positve
+        String binary = convertPositiveNumberToBinary(m,bytes,true);
+        int len = binary.length();
+        StringBuilder sb = new StringBuilder(len); //in-bits
+        boolean foundFirstOne = false;
+        for(int i=0; i < len;i++) {
+            if(foundFirstOne)  {
+                if(binary.charAt(i) == '1') {
+                    sb.append('0');
+                }
+                else {
+                    sb.append('1');
+                }
+            }
+            else {
+                if(binary.charAt(i) == '1') {
+                    foundFirstOne = true;
+                }
+                sb.append(binary.charAt(i));
+            }
+        }
+        return sb.reverse().toString();
+
+    }
 
 }
