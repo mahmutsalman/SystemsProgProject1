@@ -77,7 +77,7 @@ class HelloWorld {
         }
         //endregion
 
-        //The Numerical Part. Read each line.
+        //The Numerical Part.
         for (int i = 0; i < stringArr.length; i++) {
             boolean isSigned = false;
             boolean signedFlag = true; // To understand input is signed value
@@ -88,7 +88,7 @@ class HelloWorld {
             //Read each line
             if (stringArr[i] != null) {
                 String textValue = stringArr[i];
-                //THIS CHUNK IS FOR SIGNED NUMBERS WITH POINT
+                //THIS CHUNK IS FOR SIGNED NUMBERS WITH POINT ZERO
                 if (textValue.contains(".")) { // for 1.0 like numbers
                     String[] tokens = textValue.split("\\.");
 
@@ -187,15 +187,18 @@ class HelloWorld {
 
                     StringBuilder sb = new StringBuilder(textValue);
                     boolean sign = true;
+                    //Check if negative, if so, remove dash and set sign to false
                     if (textValue.charAt(0) == '-') {
                         sign = false;
                         sb.deleteCharAt(0);
                     }
+                    //Convert to binary both decimal and fractional parts
+                    //Ex: 2.5 >>> 10.101 >>> 1.0101 Left side is stored at floating number, and right at exponent
                     String floatingNumber = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
                     String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
 
                     String s = floatingNumber;
-
+                    System.out.println("floatingpoint is  " + floatingNumber);
                     StringBuilder sb2 = new StringBuilder(s);
                     String newS = "";
                     int size = mantissa;

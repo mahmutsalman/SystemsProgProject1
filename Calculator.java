@@ -12,10 +12,11 @@ public class Calculator {
 
         StringBuilder sb = new StringBuilder();
 
-        //  Integer part
+        //  Integer part. Convert to binary.
         BigDecimal two = BigDecimal.valueOf(2);
         BigDecimal zero = BigDecimal.ZERO;
         while ( integer.compareTo(zero) > 0 ) {
+            //two -> divisor, result[0] = result, result[1] = remainder
             BigDecimal[] result = integer.divideAndRemainder(two);
             sb.append(result[1]);
             integer = result[0];
