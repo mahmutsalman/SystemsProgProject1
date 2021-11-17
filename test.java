@@ -12,7 +12,7 @@ import java.util.*;
 import java.lang.StringBuilder;
 import java.io.*;
 
-class HelloWorld {
+class test {
 
     private static final String[] hexValues = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D",
             "E", "F" };
