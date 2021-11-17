@@ -88,10 +88,10 @@ class HelloWorld {
             //Read each line
             if (stringArr[i] != null) {
                 String textValue = stringArr[i];
-                //THIS CHUNK IS FOR SIGNED NUMBERS WITH POINT ZERO
+
+                /* THIS CHUNK IS FOR SIGNED NUMBERS WITH POINT ZERO
                 if (textValue.contains(".")) { // for 1.0 like numbers
                     String[] tokens = textValue.split("\\.");
-
                     //if the format is "+-X.0" // POSITIVE OR NEGATIVE
                     if (tokens[1].length() == 1 && tokens[1].contains("0")) {
                         isSigned = true;
@@ -103,7 +103,8 @@ class HelloWorld {
                                 // For signed values
                                 String signedInteger = textValue0;// textValue
                                 String binary = convertNegativeNumberToBinary(Integer.parseInt(signedInteger), 2);
-                                System.out.println(binary);
+
+                                //region Write to file code...
                                 try {
                                     BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
                                     myWriter.write(binaryToHexadecimal(binary, endian) + "\n");
@@ -113,6 +114,8 @@ class HelloWorld {
                                     System.out.println("An error occurred.");
                                     e.printStackTrace();
                                 }
+                                //endregion
+
                             }
                             //if the format is "X.0" // POSITIVE ONLY
                             else {
@@ -132,6 +135,8 @@ class HelloWorld {
                         continue;
                     }
                 }
+                */
+
                 //THIS CHUNK IS FOR UNSIGNED NUMBERS
                 if (textValue.contains("u")) {
                     //for unsigned data
@@ -184,7 +189,6 @@ class HelloWorld {
                 }
                 //THIS CHUNK IS FOR FLOATING POINT NUMBERS
                 if (textValue.contains(".")){ // for floating point data
-
                     StringBuilder sb = new StringBuilder(textValue);
                     boolean sign = true;
                     //Check if negative, if so, remove dash and set sign to false
@@ -194,52 +198,58 @@ class HelloWorld {
                     }
                     //Convert to binary both decimal and fractional parts
                     //Ex: 2.5 >>> 10.101 >>> 1.0101 Left side is stored at floating number, and right at exponent
-                    String floatingNumber = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
-                    String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
 
-                    String s = floatingNumber;
-                    System.out.println("floatingpoint is  " + floatingNumber);
-                    StringBuilder sb2 = new StringBuilder(s);
-                    String newS = "";
-                    int size = mantissa;
-                    int k = size +2;
+                    //TODO decimal to binary: 2.0 gibi sayılarda 10 veriyor. 10.0 vermesi lazım.
+
+                    String floatingPoint = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
+                    String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
+                    System.out.println("f is " + floatingPoint);
+                    //fraction = mantissa
+
+                    StringBuilder sb2 = new StringBuilder(floatingPoint);
+                    sb2 = new StringBuilder(sb2.substring(2, sb2.length()));
+                    String fraction = sb2.toString();
+                    String newFraction = "";
                     // no rounding
-                    if (s.length() == size+2) {
-                        newS = s;
-                        //System.out.println(newS);
+                    if (fraction.length() == mantissa) {
+                        newFraction = sb2.toString();
                     }
                     //if undernumbered, add zeros
-                    else if (sb2.toString().length() < size+2) {
-                        while (sb2.toString().length() < size+2){
+                    else if (sb2.toString().length() < mantissa) {
+                        while (sb2.toString().length() < mantissa){
                             sb2.append(0);
-                            newS = sb2.toString();
+                            newFraction = sb2.toString();
                         }
                     }
                     //if overnumbered, do rounding
                     //_ROUNDING
-                    else if (s.charAt(k) == '0' ) { //round down
-                        newS = s.substring(2, k);
+                    //round down
+                    //TODO reorganize ifs
+                    else if (sb2.toString().length() > mantissa && s.charAt(k) == '0' ) {
+                        newFraction = s.substring(2, k);
                     }
-                    else if ( s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) { //round up
-                        newS = s.substring(2, k);
-                        String rounded = adder(newS, "1");
-                        newS = rounded;
+                    //round up
+                    else if (sb2.toString().length() > mantissa && s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) {
+                        newFraction = s.substring(2, k);
+                        String rounded = adder(newFraction, "1");
+                        newFraction = rounded;
                     }
-                    else if ( s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) { //halfway
+                    //halfway
+                    else if (sb2.toString().length() > mantissa && s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) {
                         if (s.charAt(k-1) == '1') { // round up
-                            newS = s.substring(2, k);
-                            String rounded = adder(newS, "1");
-                            newS = rounded;
+                            newFraction = s.substring(2, k);
+                            String rounded = adder(newFraction, "1");
+                            newFraction = rounded;
                         }
                         if (s.charAt(k-1) == '0') { // round down
-                            newS = s.substring(2, k);
+                            newFraction = s.substring(2, k);
                         }
                     }
                     //appending
                     String signValue = (sign) ? "0": "1";
-                    String fraction = newS.substring(2, newS.length());
-                    if (!newS.contains(".")) {
-                        fraction = newS;
+                    String fraction = newFraction.substring(2, newFraction.length());
+                    if (!newFraction.contains(".")) {
+                        fraction = newFraction;
                     }
                     sign = sign; //boolean
                     int bias = (int)Math.pow(2, expBit-1) -1;
@@ -295,7 +305,6 @@ class HelloWorld {
     public static String binaryToHexadecimal(String binary, int endian) {
         String hexadecimal;
         binary = leftPad(binary);
-        // System.out.println(convertBinaryToHexadecimal(binary));
         return convertBinaryToHexadecimal(binary, endian);
     }
     //Convert binary to hexadecimal

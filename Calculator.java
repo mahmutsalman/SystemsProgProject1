@@ -22,15 +22,16 @@ public class Calculator {
             integer = result[0];
         }
         sb.reverse();
-
         //  Fractional part
         int count = 0;
+        //If it has fraction, add point
         if ( fractional.compareTo(zero) != 0 ) {
             sb.append(".");
         }
         while ( fractional.compareTo(zero) != 0 ) {
             count++;
             fractional = fractional.multiply(two);
+            //if fraction is equal or greater than 0.5, than add a 1. if not add 0.
             sb.append(fractional.setScale(0, RoundingMode.FLOOR));
             if ( fractional.compareTo(BigDecimal.ONE) >= 0 ) {
                 fractional = fractional.subtract(BigDecimal.ONE);
@@ -48,18 +49,34 @@ public class Calculator {
         // and returns it and its exponent
 
         String newNumber = "";
-        String exp = "";
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '.') {
-                StringBuilder sb = new StringBuilder(s);
-                sb.deleteCharAt(i);
-                sb.insert(1, ".");
-                exp = String.valueOf(i-1);
-                newNumber = sb.toString();
+        String E = "";
+        if (!s.contains(".")) {
+            StringBuilder sb = new StringBuilder(s);
+            //TODO remove 0's from the end to the beginning
+            int k = 0;
+            while(sb.charAt(sb.length() - 2) == 0 && sb.length() != 1) {
+                sb.deleteCharAt(sb.length() - 2);
+                k++;
             }
+            sb.insert(1, ".");
+            //E holds the value how many times we shifted the point to the left
+            E = String.valueOf(k);
+            newNumber = sb.toString();
         }
+        else {
+            for (int i = 0; i < s.length(); i++) {
+                if (s.charAt(i) == '.') {
+                    StringBuilder sb = new StringBuilder(s);
+                    sb.deleteCharAt(i);
+                    sb.insert(1, ".");
+                    //E holds the value how many times we shifted the point to the left
+                    E = String.valueOf(i - 1);
+                    newNumber = sb.toString();
+                }
+            }
 
-        return new String[] {newNumber, exp};
+        }
+        return new String[] {newNumber, E};
     }
 
     public String rounder(String s) {
