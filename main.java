@@ -14,11 +14,12 @@ import java.io.*;
 
 class HelloWorld {
 
-
     private static final String[] hexValues = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D",
             "E", "F" };
 
     public static void main(String[] args) throws IOException {
+        //Before numerical code
+        //region
         Scanner input = new Scanner(System.in);
         System.out.println("Enter the byte ordering type: 1 for Little Endian, 2 for Big endian");
         int endian = input.nextInt();
@@ -26,7 +27,7 @@ class HelloWorld {
         System.out.println("Enter the floating point size: ");
         int byt = input.nextInt();
 
-
+        //Configure byt settings
         int expBit = 0, mantissa = 0;
         switch (byt) {
             case 1:
@@ -46,17 +47,20 @@ class HelloWorld {
                 mantissa = 19;
                 break;
         }
+
         Calculator calculator = new Calculator();
         BufferedReader in = new BufferedReader(new FileReader(
                 "input.txt"));
         String str;
 
+        //Store lines in list as strings
         List<String> list = new ArrayList<String>();
         while ((str = in.readLine()) != null) {
             list.add(str);
         }
+        //Convert list to an array
         String[] stringArr = list.toArray(new String[0]);
-        // Char array to hold binary version of the input.(i.e 4u 0000 00011 1010 0000 )
+        // Initialize a char array to hold binary version of the input.(i.e 4u 0000 00011 1010 0000 )
         // It is reused
         char[] binaryArray16 = new char[16];
         // Creating output.txt file
@@ -71,29 +75,35 @@ class HelloWorld {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+        //endregion
 
+        //The Numerical Part. Read each line.
         for (int i = 0; i < stringArr.length; i++) {
             boolean isSigned = false;
             boolean signedFlag = true; // To understand input is signed value
             int j = 0; // Instead of inside of for loop, initialize here to be able go to next digit when
-            // program finds '-'
+            // program finds '-'.
+            // The reasoning is: j is indicator for digit.
 
+            //Read each line
             if (stringArr[i] != null) {
                 String textValue = stringArr[i];
-
-
+                //THIS CHUNK IS FOR SIGNED NUMBERS WITH POINT
                 if (textValue.contains(".")) { // for 1.0 like numbers
                     String[] tokens = textValue.split("\\.");
-                    if (tokens[1].length() == 1 && tokens[1].contains("0")) { // if number is like 1.0
+
+                    //if the format is "+-X.0" // POSITIVE OR NEGATIVE
+                    if (tokens[1].length() == 1 && tokens[1].contains("0")) {
                         isSigned = true;
                         String textValue0 = tokens[0];
+                        //if does not contain "u", which means it is a signed integer
                         if (!textValue0.contains("u")) {
-
+                            //if the format is "-X.0" // NEGATIVE ONLY
                             if (textValue0.contains("-")) {
                                 // For signed values
                                 String signedInteger = textValue0;// textValue
                                 String binary = convertNegativeNumberToBinary(Integer.parseInt(signedInteger), 2);
-
+                                System.out.println(binary);
                                 try {
                                     BufferedWriter myWriter = new BufferedWriter(new FileWriter("output.txt", true));
                                     myWriter.write(binaryToHexadecimal(binary, endian) + "\n");
@@ -103,7 +113,9 @@ class HelloWorld {
                                     System.out.println("An error occurred.");
                                     e.printStackTrace();
                                 }
-                            } else {
+                            }
+                            //if the format is "X.0" // POSITIVE ONLY
+                            else {
                                 String signedInteger = textValue0;// textValue
                                 String binary = convertPositiveNumberToBinary(Integer.parseInt(signedInteger), 2, false);
                                 try {
@@ -120,8 +132,9 @@ class HelloWorld {
                         continue;
                     }
                 }
-                if (textValue.contains("u")) { //for unsigned data
-
+                //THIS CHUNK IS FOR UNSIGNED NUMBERS
+                if (textValue.contains("u")) {
+                    //for unsigned data
                     // Take apart value from 'number-u' and make it 'number'
                     // 1- Find the location of the character 'u'
                     // 2- Delete that chac and create
@@ -138,6 +151,7 @@ class HelloWorld {
                         e.printStackTrace();
                     }
                 }
+                //THIS CHUNK IS FOR SIGNED NUMBERS WITHOUT POINT
                 if (!textValue.contains("u") && !textValue.contains(".")) { // For signed floating point
                     if (textValue.contains("-")) {
                         // For signed values
@@ -168,8 +182,8 @@ class HelloWorld {
                         }
                     }
                 }
-
-                if(textValue.contains(".")){ // for floating point data
+                //THIS CHUNK IS FOR FLOATING POINT NUMBERS
+                if (textValue.contains(".")){ // for floating point data
 
                     StringBuilder sb = new StringBuilder(textValue);
                     boolean sign = true;
@@ -250,7 +264,7 @@ class HelloWorld {
             }
         }
     }
-    //converts from integer to binary
+    //Converts from integer to binary FOR UNSIGNED CHUNK
     static void convert2BinaryFromInteger(char a[], int b) {
         for (int i = 0; i < 16; i++) {
             if (b % 2 == 0)
@@ -261,7 +275,7 @@ class HelloWorld {
 
         }
     }
-
+    //Converts from integer to binary FOR FLOATING POINT CHUNK
     static char[] convert2BinaryFromInteger(int b, int size){
 
         char[] a = new char[size];
@@ -274,15 +288,14 @@ class HelloWorld {
         }
         return a;
     }
-
-    // converts hexa from binary
+    //Convert hexadecimal from binary
     public static String binaryToHexadecimal(String binary, int endian) {
         String hexadecimal;
         binary = leftPad(binary);
         // System.out.println(convertBinaryToHexadecimal(binary));
         return convertBinaryToHexadecimal(binary, endian);
     }
-
+    //Convert binary to hexadecimal
     public static String convertBinaryToHexadecimal(String binary, int endian) {
         String hexadecimal = "";
         int sum = 0;
@@ -315,7 +328,7 @@ class HelloWorld {
         return hexadecimal;
 
     }
-
+    //Pads the binary number. Ex: 1 > 0001, ex: 10001 > 00010001
     public static String leftPad(String binary) {
         int paddingCount = 0;
         if ((binary.length() % 4) > 0)
@@ -327,8 +340,7 @@ class HelloWorld {
         }
         return binary;
     }
-
-    // Convert a positive decimal number to binary
+    //Convert a positive decimal number to binary
     public static String convertPositiveNumberToBinary(int n, int bytes, boolean reverse) {
         int bits = 8 * bytes;
         StringBuilder sb = new StringBuilder(bits); // in-bits
@@ -353,7 +365,7 @@ class HelloWorld {
             return sb.reverse().toString();
         }
     }
-
+    //Convert a negative decimal number to binary
     public static String convertNegativeNumberToBinary(int n, int bytes) {
         int m = -n; // convert to positve
         String binary = convertPositiveNumberToBinary(m, bytes, true);
@@ -377,6 +389,7 @@ class HelloWorld {
         return sb.reverse().toString();
 
     }
+    //Adds two binary numbers
     public static String adder(String b1, String b2) {
 
         long a1 = Long.parseLong(b1);

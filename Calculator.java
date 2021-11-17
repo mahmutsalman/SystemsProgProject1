@@ -42,7 +42,8 @@ public class Calculator {
         return sb.toString();
     }
 
-    public String[] normalizer(String s) { // takes input example: 1001.1001 and converts into 1.0011001,
+    public String[] normalizer(String s) {
+        // takes input example: 1001.1001 and converts into 1.0011001,
         // and returns it and its exponent
 
         String newNumber = "";
