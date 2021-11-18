@@ -225,26 +225,32 @@ class HelloWorld {
                     //_ROUNDING
                     //round down
                     //TODO reorganize ifs
-                    else if (sb2.toString().length() > mantissa && s.charAt(k) == '0' ) {
-                        newFraction = s.substring(2, k);
-                    }
-                    //round up
-                    else if (sb2.toString().length() > mantissa && s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1") ) {
-                        newFraction = s.substring(2, k);
-                        String rounded = adder(newFraction, "1");
-                        newFraction = rounded;
-                    }
-                    //halfway
-                    else if (sb2.toString().length() > mantissa && s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) {
-                        if (s.charAt(k-1) == '1') { // round up
+                    else if (sb2.toString().length() > mantissa ) {
+                        //round down
+                        if (fraction.charAt(fraction.length()-1) == '0')
+                            newFraction = fraction;
+                        //round up
+                        if (s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1")) {
                             newFraction = s.substring(2, k);
                             String rounded = adder(newFraction, "1");
                             newFraction = rounded;
                         }
-                        if (s.charAt(k-1) == '0') { // round down
-                            newFraction = s.substring(2, k);
+                        //halfway
+                        else if (s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) {
+                            if (s.charAt(k-1) == '1') { // round up
+                                newFraction = s.substring(2, k);
+                                String rounded = adder(newFraction, "1");
+                                newFraction = rounded;
+                            }
+                            if (s.charAt(k-1) == '0') { // round down
+                                newFraction = s.substring(2, k);
+                            }
                         }
                     }
+                    //round up
+
+                    //halfway
+
                     //appending
                     String signValue = (sign) ? "0": "1";
                     String fraction = newFraction.substring(2, newFraction.length());
