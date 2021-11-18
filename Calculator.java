@@ -45,18 +45,15 @@ public class Calculator {
     }
 
     public String[] normalizer(String s) {
-        // takes input example: 1001.1001 and converts into 1.0011001,
-        // and returns it and its exponent
+        //Takes input example: 1001.1001 and converts into 1.0011001,
+        //and returns it and its exponent
 
         String newNumber = "";
         String E = "";
         if (!s.contains(".")) {
             StringBuilder sb = new StringBuilder(s);
-            //TODO remove 0's from the end to the beginning
-            int k = 0;
             while(sb.charAt(sb.length() - 2) == 0 && sb.length() != 1) {
                 sb.deleteCharAt(sb.length() - 1);
-                k++;
             }
             sb.insert(1, ".");
             //E holds the value how many times we shifted the point to the left
