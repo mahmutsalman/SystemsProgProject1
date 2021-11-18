@@ -1,7 +1,6 @@
 //Systems Programming Project 1
 //Authors: Mahmut Salman 150118506
 //Engin Bektaş 150118501
-//Atilla Gel 150119564
 
 //In this project, our goal is to convert decimal numbers to hexadecimal. While doing that we worked with
 //signed, unsigned and floating point numbers.
