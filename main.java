@@ -18,16 +18,22 @@ class HelloWorld {
             "E", "F" };
 
     public static void main(String[] args) throws IOException {
-        //Before numerical code
-        //region
+
+
+        //region Prompting input
         Scanner input = new Scanner(System.in);
-        System.out.println("Enter the byte ordering type: 1 for Little Endian, 2 for Big endian");
+        System.out.println("Enter the input file name");
+        String inputFileName = input.nextLine();
+
+        //TODO convert endianstring to endian
+        System.out.println("Enter the byte ordering type: l for Little Endian, b for Big endian");
         int endian = input.nextInt();
 
         System.out.println("Enter the floating point size: ");
         int byt = input.nextInt();
+        //endregion
 
-        //Configure byt settings
+        //region Configuration of exponent bits and mantissa
         int expBit = 0, mantissa = 0;
         switch (byt) {
             case 1:
@@ -47,10 +53,12 @@ class HelloWorld {
                 mantissa = 21;
                 break;
         }
+        //endregion
 
+        //region Reading file and creating output.txt
         Calculator calculator = new Calculator();
         BufferedReader in = new BufferedReader(new FileReader(
-                "input.txt"));
+                inputFileName));
         String str;
 
         //Store lines in list as strings
@@ -199,17 +207,28 @@ class HelloWorld {
                     //Convert to binary both decimal and fractional parts
                     //Ex: 2.5 >>> 10.101 >>> 1.0101 Left side is stored at floating number, and right at exponent
 
-                    //TODO decimal to binary: 2.0 gibi sayılarda 10 veriyor. 10.0 vermesi lazım.
-
                     String floatingPoint = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[0];
-                    String exponent = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
+                    String E = calculator.normalizer(calculator.decimalToBinary(new BigDecimal(sb.toString())))[1];
                     System.out.println("f is " + floatingPoint);
                     //fraction = mantissa
-
+                    int pointIndex = 0;
+                    for(int k = 0; k < floatingPoint.length()-1; k++) {
+                        if (floatingPoint.charAt(k) == '.') {
+                            pointIndex = k;
+                            break;
+                        }
+                    }
                     StringBuilder sb2 = new StringBuilder(floatingPoint);
-                    sb2 = new StringBuilder(sb2.substring(2, sb2.length()));
+                    sb2 = new StringBuilder(sb2.substring(pointIndex+1, sb2.length()));
                     String fraction = sb2.toString();
                     String newFraction = "";
+                    //While calculating the mantissa to get the floating point value, you will
+                    //only use the first 13 bits of the fraction part (for 3-byte and 4-byte data
+                    //sizes).
+                    int originalMantissa = mantissa;
+                    if (byt >= 3) {
+                        mantissa = 13;
+                    }
                     // no rounding
                     if (fraction.length() == mantissa) {
                         newFraction = sb2.toString();
@@ -224,28 +243,36 @@ class HelloWorld {
                     //if overnumbered, do rounding
                     //_ROUNDING
                     //round down
-                    //TODO reorganize ifs
                     else if (sb2.toString().length() > mantissa ) {
                         //round down
-                        if (fraction.charAt(fraction.length()-1) == '0')
+                        if (fraction.charAt(mantissa) == '0')
                             newFraction = fraction;
                         //round up
-                        if (s.charAt(k) == '1' && s.substring(k+1, s.length()).contains("1")) {
-                            newFraction = s.substring(2, k);
-                            String rounded = adder(newFraction, "1");
+                        if (fraction.charAt(mantissa) == '1' && fraction.substring(mantissa+1, fraction.length()).contains("1")) {
+                            newFraction = fraction.substring(0, mantissa);
+                            String rounded = newFraction;
+
+                            if(newFraction.contains("0")) {
+                                rounded = adder(newFraction, "1");
+
+                            }
                             newFraction = rounded;
                         }
                         //halfway
-                        else if (s.charAt(k) == '1' && !s.substring(k+1, s.length()).contains("1") ) {
-                            if (s.charAt(k-1) == '1') { // round up
-                                newFraction = s.substring(2, k);
+                        else if (fraction.charAt(mantissa) == '1' && !fraction.substring(mantissa+1, fraction.length()).contains("1") ) {
+                            if (fraction.charAt(mantissa-1) == '1') { // round up if end is odd
+                                newFraction = fraction;
                                 String rounded = adder(newFraction, "1");
+                                StringBuilder sb3 = new StringBuilder(rounded);
+                                sb3.deleteCharAt(sb3.length()-1);
+                                rounded = sb3.toString();
                                 newFraction = rounded;
                             }
-                            if (s.charAt(k-1) == '0') { // round down
-                                newFraction = s.substring(2, k);
+                            if (fraction.charAt(mantissa-1) == '0') { // round down if end is even
+                                newFraction = fraction;
                             }
                         }
+                        newFraction = completer(newFraction, originalMantissa);
                     }
                     //round up
 
@@ -253,20 +280,16 @@ class HelloWorld {
 
                     //appending
                     String signValue = (sign) ? "0": "1";
-                    String fraction = newFraction.substring(2, newFraction.length());
-                    if (!newFraction.contains(".")) {
-                        fraction = newFraction;
-                    }
                     sign = sign; //boolean
                     int bias = (int)Math.pow(2, expBit-1) -1;
-                    int exp = Integer.parseInt(exponent) + bias;
+                    int exp = Integer.parseInt(E) + bias;
                     char[] a = convert2BinaryFromInteger(exp, expBit);
                     String exponentString = new String(a);
                     StringBuilder ieee = new StringBuilder(new String());
                     // get it all together
                     ieee.append(signValue);
                     ieee.append(exponentString);
-                    ieee.append(fraction);
+                    ieee.append(newFraction);
 
                     String FP = binaryToHexadecimal(ieee.toString(), endian);
 
@@ -343,10 +366,14 @@ class HelloWorld {
                 hexadecimal = sb.toString();
             }
         }
-        return hexadecimal;
+        String returnHexadecimal = "";
+        for (int i = 0; i < hexadecimal.length(); i += 2) {
+            returnHexadecimal += hexadecimal.substring(i, i+2) + " ";
+        }
+        return returnHexadecimal;
 
     }
-    //Pads the binary number. Ex: 1 > 0001, ex: 10001 > 00010001
+    //Pads the binary numberto the left. Ex: 1 > 0001, ex: 10001 > 00010001
     public static String leftPad(String binary) {
         int paddingCount = 0;
         if ((binary.length() % 4) > 0)
@@ -355,6 +382,14 @@ class HelloWorld {
         while (paddingCount > 0) {
             binary = "0" + binary;
             paddingCount--;
+        }
+        return binary;
+    }
+    //Pads the binary number to the right. Ex: 1 > 0001, ex: 10001 > 00010001
+    public static String completer(String binary, int originalMantissa) {
+        int paddingCount = 0;
+        while ((binary.length() < originalMantissa)) {
+            binary = binary + "0";
         }
         return binary;
     }

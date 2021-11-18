@@ -55,23 +55,41 @@ public class Calculator {
             //TODO remove 0's from the end to the beginning
             int k = 0;
             while(sb.charAt(sb.length() - 2) == 0 && sb.length() != 1) {
-                sb.deleteCharAt(sb.length() - 2);
+                sb.deleteCharAt(sb.length() - 1);
                 k++;
             }
             sb.insert(1, ".");
             //E holds the value how many times we shifted the point to the left
-            E = String.valueOf(k);
+            E = Integer.toString(s.length() - 1);
             newNumber = sb.toString();
         }
         else {
-            for (int i = 0; i < s.length(); i++) {
-                if (s.charAt(i) == '.') {
-                    StringBuilder sb = new StringBuilder(s);
-                    sb.deleteCharAt(i);
-                    sb.insert(1, ".");
-                    //E holds the value how many times we shifted the point to the left
-                    E = String.valueOf(i - 1);
-                    newNumber = sb.toString();
+            if (s.charAt(0) == '.') {
+                StringBuilder sb = new StringBuilder(s);
+                sb.deleteCharAt(0);
+                s = sb.toString();
+                for (int i = 0; i < s.length(); i++) {
+                    if (s.charAt(i) == '1') {
+
+                        E = Integer.toString(-i-1);
+                        sb.insert(i, ".");
+                        sb.delete(0, i);
+                        //E holds the value how many times we shifted the point to the left
+                        newNumber = sb.toString();
+                        break;
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < s.length(); i++) {
+                    if (s.charAt(i) == '.') {
+                        StringBuilder sb = new StringBuilder(s);
+                        sb.deleteCharAt(i);
+                        sb.insert(1, ".");
+                        //E holds the value how many times we shifted the point to the left
+                        E = String.valueOf(i - 1);
+                        newNumber = sb.toString();
+                    }
                 }
             }
 
@@ -79,8 +97,5 @@ public class Calculator {
         return new String[] {newNumber, E};
     }
 
-    public String rounder(String s) {
-        return "s";
-    }
 
 }
