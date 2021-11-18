@@ -31,20 +31,20 @@ class HelloWorld {
         int expBit = 0, mantissa = 0;
         switch (byt) {
             case 1:
-                expBit = 3;
-                mantissa = 4;
+                expBit = 4;
+                mantissa = 3;
                 break;
             case 2:
-                expBit = 8;
-                mantissa = 7;
+                expBit = 6;
+                mantissa = 9;
                 break;
             case 3:
-                expBit = 10;
-                mantissa = 13;
+                expBit = 8;
+                mantissa = 15;
                 break;
             case 4:
-                expBit = 12;
-                mantissa = 19;
+                expBit = 10;
+                mantissa = 21;
                 break;
         }
 
