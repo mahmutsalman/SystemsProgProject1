@@ -1,6 +1,8 @@
 //Systems Programming Project 1
-//Authors: Mahmut Salman 150118506
+//Authors:
+//Mahmut Salman 150118506
 //Engin Bektas 150118501
+//Kardelen Kubat 150118056
 
 //In this project, our goal is to convert decimal numbers to hexadecimal. While doing that we worked with
 //signed, unsigned and floating point numbers.
@@ -11,7 +13,7 @@ import java.util.*;
 import java.lang.StringBuilder;
 import java.io.*;
 
-class HelloWorld {
+class main {
 
     private static final String[] hexValues = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D",
             "E", "F" };
